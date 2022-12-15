@@ -6,9 +6,11 @@ import numpy as np
 import torch
 import onnx
 import onnxruntime
-from onnx_tf.backend import prepare
-import tensorflow as tf
 
+try:
+    import tensorflow as tf
+except ImportError:
+    print("Warning: Tensorflow not installed. This is required when exporting to tflite")
 
 def to_numpy(tensor):
     return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
@@ -25,6 +27,7 @@ def print_final_message(model_path):
 
 
 def convert_tf_saved_model(onnx_model, output_folder):
+    from onnx_tf.backend import prepare
     tf_rep = prepare(onnx_model)  # prepare tf representation
     tf_rep.export_graph(output_folder)  # export the model
 

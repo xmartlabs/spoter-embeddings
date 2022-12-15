@@ -1,10 +1,12 @@
 # TITLE
 
-This repository contains code for the Spoter embedding model explained in this [blog post](link...).
+This repository contains code for the Spoter embedding model
+<!-- explained in this [blog post](link...). -->
 The model is heavily based on [Spoter](https://github.com/matyasbohacek/spoter) which was presented in
 [Sign Pose-Based Transformer for Word-Level Sign Language Recognition](https://openaccess.thecvf.com/content/WACV2022W/HADCV/html/Bohacek_Sign_Pose-Based_Transformer_for_Word-Level_Sign_Language_Recognition_WACVW_2022_paper.html) with one of the main modifications being
 that this is an embedding model instead of a classification model.
-This allows for several zero-shot tasks as shown in the blog post mentioned above.
+This allows for several zero-shot tasks on unseen Sign Language datasets from around the world.
+<!-- More details about this are shown in the blog post mentioned above. -->
 
 ## Get Started
 
@@ -33,6 +35,8 @@ The hyperparameters with their descriptions can be found in the [train.py](link.
 Same as with SPOTER, this model works on top of sequences of signers' skeletal data extracted from videos.
 This means that the input data has a much lower dimension compared to using videos directly, and therefore the model is
 quicker and lighter, while you can choose any SOTA body pose model to preprocess video.
+This makes our model lightweight and able to run in real-time (for example, it takes around 40ms to process a 4-second
+25 FPS video inside a web browser using onnxruntime)
 
 <!-- TODO: Mention dataset availability -->
 
@@ -41,7 +45,8 @@ quicker and lighter, while you can choose any SOTA body pose model to preprocess
 ## Modifications on [SPOTER](https://github.com/matyasbohacek/spoter)
 Here is a list of the main modifications made on Spoter code and model architecture:
 
-* The output layer is a linear layer but trained using triplet loss instead of CrossEntropyLoss
+* The output layer is a linear layer but trained using triplet loss instead of CrossEntropyLoss. The output of the model
+is therefore an embedding vector that can be used for several downstream tasks.
 * We started using the keypoints dataset published by Spoter but later created new datasets using BlazePose from Mediapipe (as it is done in [Spoter 2](link...)). This improves results considerably.
 * We select batches in a way that they contain several hard triplets and then compute the loss on all hard triplets found in each batch
 * ...
