@@ -1,5 +1,4 @@
 import os
-import logging
 import random
 import numpy as np
 import pandas as pd
@@ -19,15 +18,6 @@ def train_setup(seed, experiment_name):
     torch.backends.cudnn.deterministic = True
     g = torch.Generator()
     g.manual_seed(seed)
-
-    # Set the output format to print into the console and save into LOG file
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=[
-            logging.FileHandler(experiment_name + ".log")
-        ]
-    )
     return g
 
 

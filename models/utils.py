@@ -4,6 +4,7 @@ import torch
 from sklearn.metrics import silhouette_score
 from sklearn.manifold import TSNE
 from training.batch_sorter import sort_batches
+from utils import get_logger
 
 
 def train_epoch(model, dataloader, criterion, optimizer, device, scheduler=None):
@@ -147,6 +148,8 @@ def compute_batched_embeddings(model, device, inputs, masks, mini_batch, iterati
 
 def evaluate(model, dataloader, device, print_stats=False):
 
+    logger = get_logger(__name__)
+
     pred_correct, pred_all = 0, 0
     stats = {i: [0, 0] for i in range(101)}
 
@@ -169,13 +172,15 @@ def evaluate(model, dataloader, device, print_stats=False):
         stats = {key: value[0] / value[1] for key, value in stats.items() if value[1] != 0}
         print("Label accuracies statistics:")
         print(str(stats) + "\n")
-        logging.info("Label accuracies statistics:")
-        logging.info(str(stats) + "\n")
+        logger.info("Label accuracies statistics:")
+        logger.info(str(stats) + "\n")
 
     return pred_correct, pred_all, (pred_correct / pred_all)
 
 
 def evaluate_embedding(model, dataloader, device):
+
+    logger = get_logger(__name__)
 
     val_embeddings = []
     labels_emb = []
@@ -193,7 +198,7 @@ def evaluate_embedding(model, dataloader, device):
         X=np.array(val_embeddings),
         labels=np.array(labels_emb).reshape(len(labels_emb))
     )
-    logging.info("Silhouette Coefficient" + str(silhouette_coefficient))
+    logger.info("Silhouette Coefficient" + str(silhouette_coefficient))
 
     return silhouette_coefficient
 

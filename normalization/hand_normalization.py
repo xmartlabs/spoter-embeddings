@@ -1,6 +1,7 @@
 
-import logging
 import pandas as pd
+from utils import get_logger
+
 
 HAND_IDENTIFIERS = [
     "wrist",
@@ -35,6 +36,7 @@ def normalize_hands_full(df: pd.DataFrame) -> pd.DataFrame:
     :return: pd.DataFrame with normalized values for hand pose
     """
 
+    logger = get_logger(__name__)
     # TODO: Fix division by zero
     df.columns = [item.replace("_left_", "_0_").replace("_right_", "_1_") for item in list(df.columns)]
 
@@ -69,7 +71,7 @@ def normalize_hands_full(df: pd.DataFrame) -> pd.DataFrame:
 
                 # Prevent from even starting the analysis if some necessary elements are not present
                 if not landmarks_x_values or not landmarks_y_values:
-                    logging.warning(
+                    logger.warning(
                         " HAND LANDMARKS: One frame could not be normalized as there is no data present. Record: " + str(index) +
                         ", Frame: " + str(sequence_index))
                     continue

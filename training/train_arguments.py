@@ -35,8 +35,8 @@ def get_default_args():
     parser.add_argument("--training_set_path", type=str, default="",
                         help="Path to the training dataset CSV file (relative to root dataset)")
     parser.add_argument("--validation_set_path", type=str, default="", help="Path to the validation dataset CSV file")
-    parser.add_argument("--dataset_loader", type=str, default="clear_ml",
-                        help="Dataset loader to use, options: [clear_ml, local]")
+    parser.add_argument("--dataset_loader", type=str, default="local",
+                        help="Dataset loader to use, options: [clearml, local]")
 
     # Training hyperparameters
     parser.add_argument("--epochs", type=int, default=1300, help="Number of epochs to train the model for")
@@ -54,8 +54,8 @@ def get_default_args():
                         help="Optimizer used during training, options: [SGD, ADAM]")
 
     # Tracker
-    parser.add_argument("--tracker", type=str, default="clear_ml",
-                        help="Experiment tracker to use, options: [clear_ml, none]")
+    parser.add_argument("--tracker", type=str, default="none",
+                        help="Experiment tracker to use, options: [clearml, none]")
 
     # Scheduler
     parser.add_argument("--scheduler_factor", type=float, default=0,

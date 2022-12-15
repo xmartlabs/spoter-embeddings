@@ -2,7 +2,7 @@
 python -m train \
 	--save_checkpoints_every -1 \
     --experiment_name "augment_rotate_75_x8" \
-    --epochs 1300 \
+    --epochs 10 \
 	--optimizer "SGD" \
 	--lr 0.001 \
     --batch_size 32 \

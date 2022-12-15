@@ -1,6 +1,7 @@
 
-import logging
 import pandas as pd
+from utils import get_logger
+
 
 BODY_IDENTIFIERS = [
     "nose",
@@ -25,6 +26,7 @@ def normalize_body_full(df: pd.DataFrame) -> (pd.DataFrame, list):
     :param df: pd.DataFrame to be normalized
     :return: pd.DataFrame with normalized values for body pose
     """
+    logger = get_logger(__name__)
 
     # TODO: Fix division by zero
 
@@ -113,14 +115,14 @@ def normalize_body_full(df: pd.DataFrame) -> (pd.DataFrame, list):
         if valid_sequence:
             normalized_df = normalized_df.append(row, ignore_index=True)
         else:
-            logging.warning(" BODY LANDMARKS: One video instance could not be normalized.")
+            logger.warning(" BODY LANDMARKS: One video instance could not be normalized.")
             normalized_df = normalized_df.append(original_row, ignore_index=True)
             invalid_row_indexes.append(index)
 
-    print("The normalization of body is finished.")
-    print("\t-> Original size:", df.shape[0])
-    print("\t-> Normalized size:", normalized_df.shape[0])
-    print("\t-> Problematic videos:", len(invalid_row_indexes))
+    logger.info("The normalization of body is finished.")
+    logger.info("\t-> Original size:", df.shape[0])
+    logger.info("\t-> Normalized size:", normalized_df.shape[0])
+    logger.info("\t-> Problematic videos:", len(invalid_row_indexes))
 
     return normalized_df, invalid_row_indexes
 
@@ -138,6 +140,7 @@ def normalize_single_dict(row: dict):
     sequence_size = len(row["leftEar"])
     valid_sequence = True
     original_row = row
+    logger = get_logger(__name__)
 
     last_starting_point, last_ending_point = None, None
 
@@ -202,7 +205,7 @@ def normalize_single_dict(row: dict):
                 continue
 
             if (ending_point[0] - starting_point[0]) == 0 or (starting_point[1] - ending_point[1]) == 0:
-                logging.info("Problematic normalization")
+                logger.warning("Problematic normalization")
                 valid_sequence = False
                 break
 

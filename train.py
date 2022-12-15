@@ -4,7 +4,6 @@ import os
 import os.path as op
 import argparse
 import random
-import logging
 import json
 from datasets.dataset_loader import LocalDatasetLoader
 from tracking.tracker import Tracker
@@ -27,9 +26,10 @@ from training.batching_scheduler import BatchingScheduler
 from training.gaussian_noise import GaussianNoise
 from training.train_utils import train_setup, create_embedding_scatter_plots
 from training.train_arguments import get_default_args
+from utils import get_logger
 
 PROJECT_NAME = "spoter"
-CLEAR_ML = "clear_ml"
+CLEAR_ML = "clearml"
 
 
 def is_pre_batch_sorting_enabled(args):
@@ -37,7 +37,7 @@ def is_pre_batch_sorting_enabled(args):
 
 
 def get_tracker(tracker_name, project, experiment_name):
-    if tracker_name == CLEAR_ML:
+    if tracker_name == CLEARML:
         from tracking.clearml_tracker import ClearMLTracker
         return ClearMLTracker(project_name=project, experiment_name=experiment_name)
     else:
@@ -45,7 +45,7 @@ def get_tracker(tracker_name, project, experiment_name):
 
 
 def get_dataset_loader(loader_name):
-    if loader_name == CLEAR_ML:
+    if loader_name == CLEARML:
         from datasets.clearml_dataset_loader import ClearMLDatasetLoader
         return ClearMLDatasetLoader()
     else:
@@ -61,6 +61,8 @@ def train(args, tracker: Tracker):
     tracker.execute_remotely(queue_name="default")
     # Initialize all the random seeds
     gen = train_setup(args.seed, args.experiment_name)
+    os.environ['EXPERIMENT_NAME'] = args.experiment_name
+    logger = get_logger(args.experiment_name)
 
     # Set device to CUDA only if applicable
     device = torch.device("cpu")
@@ -168,8 +170,7 @@ def train(args, tracker: Tracker):
     top_val_acc = -999
     top_model_saved = True
 
-    print("Starting " + args.experiment_name + "...\n\n")
-    logging.info("Starting " + args.experiment_name + "...\n\n")
+    logger.info("Starting " + args.experiment_name + "...\n\n")
 
     if is_pre_batch_sorting_enabled(args):
         mini_batch_size = int(batch_size / args.hard_mining_pre_batch_multipler)
@@ -228,11 +229,9 @@ def train(args, tracker: Tracker):
             val_accs.append(val_acc)
             tracker.log_scalar_metric("acc", "val", epoch, val_acc)
 
-        logging.info(f"Epoch time: {datetime.now() - start_time}")
-        logging.info("[" + str(epoch) + "] TRAIN  loss: " + str(train_loss) + " acc: " + str(train_accs[-1]))
-        logging.info("[" + str(epoch) + "] VALIDATION  acc: " + str(val_accs[-1]))
-
-        logging.info("")
+        logger.info(f"Epoch time: {datetime.now() - start_time}")
+        logger.info("[" + str(epoch) + "] TRAIN  loss: " + str(train_loss) + " acc: " + str(train_accs[-1]))
+        logger.info("[" + str(epoch) + "] VALIDATION  acc: " + str(val_accs[-1]))
 
         lr_progress.append(optimizer.param_groups[0]["lr"])
         tracker.log_scalar_metric("lr", "lr", epoch, lr_progress[-1])
@@ -256,7 +255,7 @@ def train(args, tracker: Tracker):
                 "out-checkpoints/" + args.experiment_name + "/" + top_model_name
             )
             top_model_saved = True
-            logging.info("Saved new best checkpoint: " + top_model_name)
+            logger.info("Saved new best checkpoint: " + top_model_name)
 
     # save top model if checkpoints are disabled
     if not top_model_saved:
@@ -264,16 +263,16 @@ def train(args, tracker: Tracker):
             top_model_dict,
             "out-checkpoints/" + args.experiment_name + "/" + top_model_name
         )
-        logging.info("Saved new best checkpoint: " + top_model_name)
+        logger.info("Saved new best checkpoint: " + top_model_name)
 
     # Log scatter plots
     if not args.classification_model and args.hard_triplet_mining == "in_batch":
-        logging.info("Generating Scatter Plot.")
+        logger.info("Generating Scatter Plot.")
         best_model = slrt_model
         best_model.load_state_dict(top_model_dict["state_dict"])
         create_embedding_scatter_plots(tracker, best_model, train_loader, val_loader, device, id_to_label, epoch,
                                        top_model_name)
-    logging.info("The experiment is finished.")
+    logger.info("The experiment is finished.")
 
 
 if __name__ == '__main__':
