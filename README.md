@@ -51,6 +51,23 @@ is therefore an embedding vector that can be used for several downstream tasks.
 * We select batches in a way that they contain several hard triplets and then compute the loss on all hard triplets found in each batch
 * ...
 
+## Tracking experiments with ClearML
+The code supports tracking experiments, datasets, and models in a ClearML server.
+If you want to do this make sure to pass the following arguments to train.py:
+
+```
+    --dataset_loader=clearml
+    --tracker=clearml
+```
+
+Also make sure to correctly configure your clearml.conf file.
+If using Docker, you can map it into Docker adding these volumes when running `docker run`:
+
+```
+-v $HOME/clearml.conf:/root/clearml.conf -v $HOME/.clearml:/root/.clearml
+```
+
+
 ## License
 
 The **code** is published under the [Apache License 2.0](./LICENSE) which allows for both academic and commercial use if

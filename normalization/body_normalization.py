@@ -146,10 +146,14 @@ def normalize_single_dict(row: dict):
 
     # Treat each element of the sequence (analyzed frame) individually
     for sequence_index in range(sequence_size):
-
+        left_shoulder = (row["leftShoulder"][sequence_index][0], row["leftShoulder"][sequence_index][1])
+        right_shoulder = (row["rightShoulder"][sequence_index][0], row["rightShoulder"][sequence_index][1])
+        neck = (row["neck"][sequence_index][0], row["neck"][sequence_index][1])
+        nose = (row["nose"][sequence_index][0], row["nose"][sequence_index][1])
         # Prevent from even starting the analysis if some necessary elements are not present
-        if (row["leftShoulder"][sequence_index][0] == 0 or row["rightShoulder"][sequence_index][0] == 0) and (
-                row["neck"][sequence_index][0] == 0 or row["nose"][sequence_index][0] == 0):
+        if (left_shoulder[0] == 0 or right_shoulder[0] == 0
+            or (left_shoulder[0] == right_shoulder[0] and left_shoulder[1] == right_shoulder[1])) and (
+                neck[0] == 0 or nose[0] == 0 or (neck[0] == nose[0] and neck[1] == nose[1])):
             if not last_starting_point:
                 valid_sequence = False
                 continue
@@ -169,15 +173,12 @@ def normalize_single_dict(row: dict):
             #
             # Please, review this if using other third-party pose estimation libraries.
 
-            if row["leftShoulder"][sequence_index][0] != 0 and row["rightShoulder"][sequence_index][0] != 0:
-                left_shoulder = (row["leftShoulder"][sequence_index][0], row["leftShoulder"][sequence_index][1])
-                right_shoulder = (row["rightShoulder"][sequence_index][0], row["rightShoulder"][sequence_index][1])
+            if left_shoulder[0] != 0 and right_shoulder[0] != 0 and \
+                (left_shoulder[0] != right_shoulder[0] or left_shoulder[1] != right_shoulder[1]):
                 shoulder_distance = ((((left_shoulder[0] - right_shoulder[0]) ** 2) + (
                         (left_shoulder[1] - right_shoulder[1]) ** 2)) ** 0.5)
                 head_metric = shoulder_distance
             else:
-                neck = (row["neck"][sequence_index][0], row["neck"][sequence_index][1])
-                nose = (row["nose"][sequence_index][0], row["nose"][sequence_index][1])
                 neck_nose_distance = ((((neck[0] - nose[0]) ** 2) + ((neck[1] - nose[1]) ** 2)) ** 0.5)
                 head_metric = neck_nose_distance
 
