@@ -6,10 +6,9 @@ python -m train \
 	--optimizer "SGD" \
 	--lr 0.001 \
     --batch_size 32 \
-	--dataset_project "Sign Language Recognition" \
-	--dataset_name "wlasl_mapped_mediapipe_only_landmarks_25fps" \
-	--training_set_path "WLASL100_train_25fps.csv" \
-	--validation_set_path "WLASL100_val_25fps.csv" \
+	--dataset_name "wlasl" \
+	--training_set_path "WLASL100_train.csv" \
+	--validation_set_path "WLASL100_test.csv" \
 	--vector_length 32 \
 	--epoch_iters -1 \
 	--scheduler_factor 0 \

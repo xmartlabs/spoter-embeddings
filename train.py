@@ -29,7 +29,7 @@ from training.train_arguments import get_default_args
 from utils import get_logger
 
 PROJECT_NAME = "spoter"
-CLEAR_ML = "clearml"
+CLEARML = "clearml"
 
 
 def is_pre_batch_sorting_enabled(args):
