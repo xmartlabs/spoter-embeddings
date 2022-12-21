@@ -26,7 +26,7 @@ Landmark = namedtuple("Landmark", ["x", "y"])
 
 class LandmarksResults:
     """
-    Wrapper for landmarks results. When not available it fills with -1
+    Wrapper for landmarks results. When not available it fills with 0
     """
 
     def __init__(

@@ -35,8 +35,6 @@ def get_landmarks_names():
 
 def convert_to_str(arr, precision=6):
     if isinstance(arr, np.ndarray):
-        # convert to 0 those landmarks that were not found
-        arr[arr == -1] = 0
         values = []
         for val in arr:
             if val == 0:
