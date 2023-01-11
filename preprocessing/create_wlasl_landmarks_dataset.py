@@ -13,6 +13,8 @@ from tqdm.auto import tqdm
 from sklearn.model_selection import train_test_split
 from normalization.blazepose_mapping import map_blazepose_df
 
+BASE_DATA_FOLDER = 'data/'
+
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
@@ -71,8 +73,8 @@ if __name__ == '__main__':
         print(f'Folder {dataset_folder} already exists, please remove it and run the script again')
         exit()
 
-    shutil.copy('data/wlasl/id_to_label.json', dataset_folder)
-    shutil.copy('data/wlasl/WLASL_v0.3.json', dataset_folder)
+    shutil.copy(os.path.join(BASE_DATA_FOLDER, 'wlasl/id_to_label.json'), dataset_folder)
+    shutil.copy(os.path.join(BASE_DATA_FOLDER, 'wlasl/WLASL_v0.3.json'), dataset_folder)
 
     id_to_label_json = op.join(dataset_folder, 'id_to_label.json')
     wlasl_json_fn = op.join(dataset_folder, 'WLASL_v0.3.json')
