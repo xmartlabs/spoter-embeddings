@@ -1,15 +1,17 @@
-pandas==1.1.5
-tqdm==4.54.1
-matplotlib==3.5.3
-torchvision==0.13.0
-scikit-learn==1.0.2
-opencv-python==4.6.0.66
-clearml==1.6.4
+bokeh==2.4.3
 boto3>=1.9
-notebook==6.4.12
-plotly==5.11.0
-pandas==1.1.5
+clearml==1.6.4
+ipywidgets==8.0.4
+matplotlib==3.5.3
 mediapipe==0.8.11
+notebook==6.5.2
+opencv-python==4.6.0.66
+pandas==1.1.5
+pandas==1.1.5
+plotly==5.11.0
+scikit-learn==1.0.2
+torchvision==0.13.0
+tqdm==4.54.1
 # requests==2.28.1
 # onnx==1.12.0
 # onnx-tf==1.10.0
