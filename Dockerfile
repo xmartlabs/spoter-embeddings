@@ -10,4 +10,5 @@ RUN apt-get install ffmpeg libsm6 libxext6  -y
 
 COPY . /app/
 WORKDIR /app/
+RUN git config --global --add safe.directory /app
 CMD ./train.sh

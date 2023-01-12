@@ -27,6 +27,13 @@ from training.gaussian_noise import GaussianNoise
 from training.train_utils import train_setup, create_embedding_scatter_plots
 from training.train_arguments import get_default_args
 from utils import get_logger
+try:
+    # Needed for argparse patching in case clearml is used
+    import clearml
+except ImportError:
+    pass
+
+
 
 PROJECT_NAME = "spoter"
 CLEARML = "clearml"
