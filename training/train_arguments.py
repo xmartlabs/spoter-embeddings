@@ -47,7 +47,8 @@ def get_default_args():
 
     # Checkpointing
     parser.add_argument("--save_checkpoints_every", type=int, default=-1,
-                        help="Determines every how many epochs the weight checkpoints are saved. If -1 only best model after final epoch")
+                        help="Determines every how many epochs the weight checkpoints are saved. If -1 only best model \
+                            after final epoch")
 
     # Optimizer
     parser.add_argument("--optimizer", type=str, default="SGD",
@@ -77,6 +78,7 @@ def get_default_args():
     parser.add_argument("--hard_mining_pre_batch_mining_count", type=int, default=5,
                         help="How many times to loop through a list of computed batches")
     parser.add_argument("--hard_mining_scheduler_triplets_threshold", type=float, default=0,
-                        help="Enables batching grouping scheduler if > 0. Defines threshold for when to decay the distance threshold of the batch sorter")
+                        help="Enables batching grouping scheduler if > 0. Defines threshold for when to decay the \
+                            distance threshold of the batch sorter")
 
     return parser

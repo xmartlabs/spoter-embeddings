@@ -1,5 +1,4 @@
 import numpy as np
-import logging
 import torch
 from sklearn.metrics import silhouette_score
 from sklearn.manifold import TSNE
@@ -102,7 +101,7 @@ def train_epoch_embedding_online(model, epoch_iters, train_loader, val_loader, c
                 optimizer.zero_grad(set_to_none=True)
                 embeddings = compute_batched_embeddings(model, device, inputs, masks, mini_batch, j)
 
-                batch_labels = labels[mini_batch*j:mini_batch * (j + 1)]
+                batch_labels = labels[mini_batch * j:mini_batch * (j + 1)]
                 loss, valid_triplets, used_triplets = criterion(embeddings, batch_labels)
 
                 loss.backward()
@@ -120,9 +119,9 @@ def train_epoch_embedding_online(model, epoch_iters, train_loader, val_loader, c
     epoch_loss = np.mean(running_loss)
     mean_used_triplets = np.mean(iter_used_triplets)
     triplets_stats = {
-            "valid_triplets": np.mean(iter_valid_triplets),
-            "used_triplets": mean_used_triplets,
-            "pct_used": np.mean(iter_pct_used)
+        "valid_triplets": np.mean(iter_valid_triplets),
+        "used_triplets": mean_used_triplets,
+        "pct_used": np.mean(iter_pct_used)
     }
 
     if batching_scheduler:
@@ -140,8 +139,8 @@ def train_epoch_embedding_online(model, epoch_iters, train_loader, val_loader, c
 
 
 def compute_batched_embeddings(model, device, inputs, masks, mini_batch, iteration):
-    batch_inputs = inputs[mini_batch*iteration:mini_batch * (iteration + 1)]
-    batch_masks = masks[mini_batch*iteration:mini_batch * (iteration + 1)]
+    batch_inputs = inputs[mini_batch * iteration:mini_batch * (iteration + 1)]
+    batch_masks = masks[mini_batch * iteration:mini_batch * (iteration + 1)]
 
     return model(batch_inputs.to(device), batch_masks.to(device)).squeeze(1)
 
@@ -179,9 +178,6 @@ def evaluate(model, dataloader, device, print_stats=False):
 
 
 def evaluate_embedding(model, dataloader, device):
-
-    logger = get_logger(__name__)
-
     val_embeddings = []
     labels_emb = []
 
@@ -198,7 +194,6 @@ def evaluate_embedding(model, dataloader, device):
         X=np.array(val_embeddings),
         labels=np.array(labels_emb).reshape(len(labels_emb))
     )
-    logger.info("Silhouette Coefficient" + str(silhouette_coefficient))
 
     return silhouette_coefficient
 

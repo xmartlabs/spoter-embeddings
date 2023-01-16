@@ -3,14 +3,17 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-eps = 1e-8 # an arbitrary small value to be used for numerical stability tricks
+eps = 1e-8  # an arbitrary small value to be used for numerical stability tricks
 
 # Adapted from https://qdrant.tech/articles/triplet-loss/
+
+
 class BatchAllTripletLoss(nn.Module):
     """Uses all valid triplets to compute Triplet loss
     Args:
     margin: Margin value in the Triplet Loss equation
     """
+
     def __init__(self, device, margin=1., filter_easy_triplets=True):
         super().__init__()
         self.margin = margin

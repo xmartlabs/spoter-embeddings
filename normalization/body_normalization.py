@@ -1,4 +1,5 @@
 
+from typing import Tuple
 import pandas as pd
 from utils import get_logger
 
@@ -19,7 +20,7 @@ BODY_IDENTIFIERS = [
 ]
 
 
-def normalize_body_full(df: pd.DataFrame) -> (pd.DataFrame, list):
+def normalize_body_full(df: pd.DataFrame) -> Tuple[pd.DataFrame, list]:
     """
     Normalizes the body position data using the Bohacek-normalization algorithm.
 
@@ -52,7 +53,8 @@ def normalize_body_full(df: pd.DataFrame) -> (pd.DataFrame, list):
         for sequence_index in range(sequence_size):
 
             # Prevent from even starting the analysis if some necessary elements are not present
-            if (row["leftShoulder_X"][sequence_index] == 0 or row["rightShoulder_X"][sequence_index] == 0) and (row["neck_X"][sequence_index] == 0 or row["nose_X"][sequence_index] == 0):
+            if (row["leftShoulder_X"][sequence_index] == 0 or row["rightShoulder_X"][sequence_index] == 0) and \
+                    (row["neck_X"][sequence_index] == 0 or row["nose_X"][sequence_index] == 0):
                 if not last_starting_point:
                     valid_sequence = False
                     continue
@@ -67,7 +69,8 @@ def normalize_body_full(df: pd.DataFrame) -> (pd.DataFrame, list):
                 # While in the paper, it is written that the head metric is calculated by halving the shoulder distance,
                 # this is meant for the distance between the very ends of one's shoulder, as literature studying body
                 # metrics and ratios generally states. The Vision Pose Estimation API, however, seems to be predicting
-                # rather the center of one's shoulder. Based on our experiments and manual reviews of the data, employing
+                # rather the center of one's shoulder. Based on our experiments and manual reviews of the data,
+                # employing
                 # this as just the plain shoulder distance seems to be more corresponding to the desired metric.
                 #
                 # Please, review this if using other third-party pose estimation libraries.
@@ -76,7 +79,7 @@ def normalize_body_full(df: pd.DataFrame) -> (pd.DataFrame, list):
                     left_shoulder = (row["leftShoulder_X"][sequence_index], row["leftShoulder_Y"][sequence_index])
                     right_shoulder = (row["rightShoulder_X"][sequence_index], row["rightShoulder_Y"][sequence_index])
                     shoulder_distance = ((((left_shoulder[0] - right_shoulder[0]) ** 2) + (
-                                (left_shoulder[1] - right_shoulder[1]) ** 2)) ** 0.5)
+                        (left_shoulder[1] - right_shoulder[1]) ** 2)) ** 0.5)
                     head_metric = shoulder_distance
                 else:
                     neck = (row["neck_X"][sequence_index], row["neck_Y"][sequence_index])
@@ -85,16 +88,21 @@ def normalize_body_full(df: pd.DataFrame) -> (pd.DataFrame, list):
                     head_metric = neck_nose_distance
 
                 # Set the starting and ending point of the normalization bounding box
-                starting_point = [row["neck_X"][sequence_index] - 3 * head_metric, row["leftEye_Y"][sequence_index] + (head_metric / 2)]
+                starting_point = [row["neck_X"][sequence_index] - 3 * head_metric,
+                                  row["leftEye_Y"][sequence_index] + (head_metric / 2)]
                 ending_point = [row["neck_X"][sequence_index] + 3 * head_metric, starting_point[1] - 6 * head_metric]
 
                 last_starting_point, last_ending_point = starting_point, ending_point
 
             # Ensure that all of the bounding-box-defining coordinates are not out of the picture
-            if starting_point[0] < 0: starting_point[0] = 0
-            if starting_point[1] < 0: starting_point[1] = 0
-            if ending_point[0] < 0: ending_point[0] = 0
-            if ending_point[1] < 0: ending_point[1] = 0
+            if starting_point[0] < 0:
+                starting_point[0] = 0
+            if starting_point[1] < 0:
+                starting_point[1] = 0
+            if ending_point[0] < 0:
+                ending_point[0] = 0
+            if ending_point[1] < 0:
+                ending_point[1] = 0
 
             # Normalize individual landmarks and save the results
             for identifier in BODY_IDENTIFIERS:
@@ -107,7 +115,7 @@ def normalize_body_full(df: pd.DataFrame) -> (pd.DataFrame, list):
                 normalized_x = (row[key + "X"][sequence_index] - starting_point[0]) / (ending_point[0] -
                                                                                        starting_point[0])
                 normalized_y = (row[key + "Y"][sequence_index] - ending_point[1]) / (starting_point[1] -
-                                                                                       ending_point[1])
+                                                                                     ending_point[1])
 
                 row[key + "X"][sequence_index] = normalized_x
                 row[key + "Y"][sequence_index] = normalized_y
@@ -174,9 +182,9 @@ def normalize_single_dict(row: dict):
             # Please, review this if using other third-party pose estimation libraries.
 
             if left_shoulder[0] != 0 and right_shoulder[0] != 0 and \
-                (left_shoulder[0] != right_shoulder[0] or left_shoulder[1] != right_shoulder[1]):
+                    (left_shoulder[0] != right_shoulder[0] or left_shoulder[1] != right_shoulder[1]):
                 shoulder_distance = ((((left_shoulder[0] - right_shoulder[0]) ** 2) + (
-                        (left_shoulder[1] - right_shoulder[1]) ** 2)) ** 0.5)
+                    (left_shoulder[1] - right_shoulder[1]) ** 2)) ** 0.5)
                 head_metric = shoulder_distance
             else:
                 neck_nose_distance = ((((neck[0] - nose[0]) ** 2) + ((neck[1] - nose[1]) ** 2)) ** 0.5)
@@ -192,10 +200,14 @@ def normalize_single_dict(row: dict):
             last_starting_point, last_ending_point = starting_point, ending_point
 
         # Ensure that all of the bounding-box-defining coordinates are not out of the picture
-        if starting_point[0] < 0: starting_point[0] = 0
-        if starting_point[1] < 0: starting_point[1] = 0
-        if ending_point[0] < 0: ending_point[0] = 0
-        if ending_point[1] < 0: ending_point[1] = 0
+        if starting_point[0] < 0:
+            starting_point[0] = 0
+        if starting_point[1] < 0:
+            starting_point[1] = 0
+        if ending_point[0] < 0:
+            ending_point[0] = 0
+        if ending_point[1] < 0:
+            ending_point[1] = 0
 
         # Normalize individual landmarks and save the results
         for identifier in BODY_IDENTIFIERS:

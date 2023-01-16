@@ -1,6 +1,5 @@
 import os
 import os.path as op
-import argparse
 import json
 import shutil
 
@@ -23,14 +22,15 @@ pose_landmarks = mp_holistic.PoseLandmark
 hand_landmarks = mp_holistic.HandLandmark
 
 
-
 def get_landmarks_names():
     '''
     Returns landmark names for mediapipe holistic model
     '''
     pose_lmks = ','.join([f'{lmk.name.lower()}_x,{lmk.name.lower()}_y' for lmk in pose_landmarks])
-    left_hand_lmks = ','.join([f'left_hand_{lmk.name.lower()}_x,left_hand_{lmk.name.lower()}_y' for lmk in hand_landmarks])
-    right_hand_lmks = ','.join([f'right_hand_{lmk.name.lower()}_x,right_hand_{lmk.name.lower()}_y' for lmk in hand_landmarks])
+    left_hand_lmks = ','.join([f'left_hand_{lmk.name.lower()}_x,left_hand_{lmk.name.lower()}_y'
+                               for lmk in hand_landmarks])
+    right_hand_lmks = ','.join([f'right_hand_{lmk.name.lower()}_x,right_hand_{lmk.name.lower()}_y'
+                                for lmk in hand_landmarks])
     lmks_names = f'{pose_lmks},{left_hand_lmks},{right_hand_lmks}'
     return lmks_names
 
@@ -48,19 +48,26 @@ def convert_to_str(arr, precision=6):
         return str(arr)
 
 
-if __name__ == '__main__':
-
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--landmarks-dataset', '-lmks', required=True, help='Path to folder with landmarks npy files. You need to run `extract_mediapipe_landmarks.py` script first')
-    parser.add_argument('--dataset-folder', '-df', default='data/wlasl', help='Path to folder where original `WLASL_v0.3.json` and `id_to_label.json` are stored. Note that final CSV files will be saved in this folder too.')
-    parser.add_argument('--videos-folder', '-videos', default=None, help='Path to folder with videos. If None, then no information of videos (fps, length, width and height) will be stored in final csv file')
+def parse_create_args(parser):
+    parser.add_argument('--landmarks-dataset', '-lmks', required=True,
+                        help='Path to folder with landmarks npy files. \
+                            You need to run `extract_mediapipe_landmarks.py` script first')
+    parser.add_argument('--dataset-folder', '-df', default='data/wlasl',
+                        help='Path to folder where original `WLASL_v0.3.json` and `id_to_label.json` are stored. \
+                            Note that final CSV files will be saved in this folder too.')
+    parser.add_argument('--videos-folder', '-videos', default=None,
+                        help='Path to folder with videos. If None, then no information of videos (fps, length, \
+                            width and height) will be stored in final csv file')
     parser.add_argument('--num-classes', '-nc', default=100, help='Number of classes to use in WLASL dataset')
     parser.add_argument('--create-new-split', action='store_true')
-    parser.add_argument('--test-size', '-ts', default=0.25, help='Test split percentage size. Only required if --create-new-split is set')
+    parser.add_argument('--test-size', '-ts', default=0.25,
+                        help='Test split percentage size. Only required if --create-new-split is set')
 
+
+# python3 preprocessing.py --landmarks-dataset=data/landmarks -videos data/wlasl/videos
+def create(args):
     logger = get_logger(__name__)
-    args = parser.parse_args()
+
     landmarks_dataset = args.landmarks_dataset
     videos_folder = args.videos_folder
     dataset_folder = args.dataset_folder
@@ -68,7 +75,7 @@ if __name__ == '__main__':
     test_size = args.test_size
 
     try:
-        os.makedirs(dataset_folder, exist_ok=True)
+        os.makedirs(dataset_folder)
     except Exception:
         print(f'Folder {dataset_folder} already exists, please remove it and run the script again')
         exit()
@@ -76,7 +83,6 @@ if __name__ == '__main__':
     shutil.copy(os.path.join(BASE_DATA_FOLDER, 'wlasl/id_to_label.json'), dataset_folder)
     shutil.copy(os.path.join(BASE_DATA_FOLDER, 'wlasl/WLASL_v0.3.json'), dataset_folder)
 
-    id_to_label_json = op.join(dataset_folder, 'id_to_label.json')
     wlasl_json_fn = op.join(dataset_folder, 'WLASL_v0.3.json')
 
     with open(wlasl_json_fn) as fid:
@@ -84,7 +90,6 @@ if __name__ == '__main__':
 
     video_data = []
     for label_id, datum in enumerate(tqdm(data[:num_classes])):
-        new_datum = {'gloss': datum['gloss']}
         instances = []
         for instance in datum['instances']:
             instances.append(instance)
@@ -102,7 +107,7 @@ if __name__ == '__main__':
                 width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
                 height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
                 fps = cap.get(cv2.CAP_PROP_FPS)
-                length = cap.get(cv2.CAP_PROP_FRAME_COUNT)/float(cap.get(cv2.CAP_PROP_FPS))
+                length = cap.get(cv2.CAP_PROP_FRAME_COUNT) / float(cap.get(cv2.CAP_PROP_FPS))
                 video_info = {'video_width': width,
                               'video_height': height,
                               'fps': fps,
@@ -143,7 +148,9 @@ if __name__ == '__main__':
 
     print(f'Num classes: {num_classes}')
     print(df_train['labels'].value_counts())
-    assert set(df_train['labels'].unique()) == set(df_test['labels'].unique()), f'The labels for train and test dataframe are different. We recommend to download the dataset again, or to use the --create-new-split flag'
+    assert set(df_train['labels'].unique()) == set(df_test['labels'].unique(
+    )), 'The labels for train and test dataframe are different. We recommend to download the dataset again, or to use \
+        the --create-new-split flag'
     for split, df_split in zip(['train', 'test'],
                                [df_train, df_test]):
         fn_out = op.join(dataset_folder, f'WLASL{num_classes}_{split}.csv')

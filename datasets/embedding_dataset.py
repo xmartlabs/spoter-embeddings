@@ -5,7 +5,7 @@ from typing import List
 import numpy as np
 
 from datasets.datasets_utils import load_dataset, tensor_to_dictionary, dictionary_to_tensor, \
-        random_augmentation
+    random_augmentation
 from normalization.body_normalization import normalize_single_dict as normalize_single_body_dict
 from normalization.hand_normalization import normalize_single_dict as normalize_single_hand_dict
 

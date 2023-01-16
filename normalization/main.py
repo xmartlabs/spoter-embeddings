@@ -24,7 +24,11 @@ del df["labels"]
 del df["video_fps"]
 
 # Convert the strings into lists
-convert = lambda x: ast.literal_eval(str(x))
+
+
+def convert(x): return ast.literal_eval(str(x))
+
+
 for column in df.columns:
     df[column] = df[column].apply(convert)
 

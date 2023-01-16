@@ -1,4 +1,3 @@
-import queue
 from clearml import Task, Logger
 from .tracker import Tracker
 

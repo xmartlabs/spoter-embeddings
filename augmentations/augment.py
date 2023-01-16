@@ -222,6 +222,7 @@ def augment_arm_joint_rotate(sign: dict, probability: float, angle_range: tuple)
                         continue
 
                     body_landmarks[to_be_rotated] = [__rotate(body_landmarks[landmark_origin][frame_index], frame,
-                        angle) for frame_index, frame in enumerate(body_landmarks[to_be_rotated])]
+                                                              angle)
+                                                     for frame_index, frame in enumerate(body_landmarks[to_be_rotated])]
 
     return __wrap_sign_into_row(body_landmarks, hand_landmarks)

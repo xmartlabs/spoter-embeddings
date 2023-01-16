@@ -1,10 +1,8 @@
+import os
 import os.path as op
 from itertools import chain
 from collections import namedtuple
-import argparse
 import glob
-
-import os
 
 import cv2
 import numpy as np
@@ -109,9 +107,7 @@ def get_landmarks(image_orig, holistic, debug=False):
     return landmarks
 
 
-if __name__ == "__main__":
-
-    parser = argparse.ArgumentParser()
+def parse_extract_args(parser):
     parser.add_argument(
         "--videos-folder",
         "-videos",
@@ -124,7 +120,10 @@ if __name__ == "__main__":
         help="Path of output folder where landmarks npy files will be saved",
         required=True,
     )
-    args = parser.parse_args()
+
+
+# python3 preprocessing.py -videos=data/wlasl/videos_25fps/ -lmks=data/landmarks
+def extract(args):
     landmarks_output = args.output_landmarks
     videos_folder = args.videos_folder
     os.makedirs(landmarks_output, exist_ok=True)

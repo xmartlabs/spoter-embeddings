@@ -66,13 +66,16 @@ def normalize_hands_full(df: pd.DataFrame) -> pd.DataFrame:
             for sequence_index in range(sequence_size):
 
                 # Retrieve all of the X and Y values of the current frame
-                landmarks_x_values = [row[key][sequence_index] for key in hand_landmarks["X"][hand_index] if row[key][sequence_index] != 0]
-                landmarks_y_values = [row[key][sequence_index] for key in hand_landmarks["Y"][hand_index] if row[key][sequence_index] != 0]
+                landmarks_x_values = [row[key][sequence_index]
+                                      for key in hand_landmarks["X"][hand_index] if row[key][sequence_index] != 0]
+                landmarks_y_values = [row[key][sequence_index]
+                                      for key in hand_landmarks["Y"][hand_index] if row[key][sequence_index] != 0]
 
                 # Prevent from even starting the analysis if some necessary elements are not present
                 if not landmarks_x_values or not landmarks_y_values:
                     logger.warning(
-                        " HAND LANDMARKS: One frame could not be normalized as there is no data present. Record: " + str(index) +
+                        " HAND LANDMARKS: One frame could not be normalized as there is no data present. Record: " +
+                        str(index) +
                         ", Frame: " + str(sequence_index))
                     continue
 
@@ -95,7 +98,8 @@ def normalize_hands_full(df: pd.DataFrame) -> pd.DataFrame:
                     key = identifier + "_" + str(hand_index) + "_"
 
                     # Prevent from trying to normalize incorrectly captured points
-                    if row[key + "X"][sequence_index] == 0 or (ending_point[0] - starting_point[0]) == 0 or (starting_point[1] - ending_point[1]) == 0:
+                    if row[key + "X"][sequence_index] == 0 or (ending_point[0] - starting_point[0]) == 0 or \
+                            (starting_point[1] - ending_point[1]) == 0:
                         continue
 
                     normalized_x = (row[key + "X"][sequence_index] - starting_point[0]) / (ending_point[0] -
@@ -175,9 +179,9 @@ def normalize_single_dict(row: dict):
                     continue
 
                 normalized_x = (row[key][sequence_index][0] - starting_point[0]) / (ending_point[0] -
-                                                                                       starting_point[0])
+                                                                                    starting_point[0])
                 normalized_y = (row[key][sequence_index][1] - starting_point[1]) / (ending_point[1] -
-                                                                                     starting_point[1])
+                                                                                    starting_point[1])
 
                 row[key][sequence_index] = list(row[key][sequence_index])
 

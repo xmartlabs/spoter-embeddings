@@ -12,6 +12,7 @@ try:
 except ImportError:
     print("Warning: Tensorflow not installed. This is required when exporting to tflite")
 
+
 def to_numpy(tensor):
     return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
 
@@ -37,8 +38,8 @@ def convert_tf_to_lite(model_dir, output_path):
     converter = tf.lite.TFLiteConverter.from_saved_model(model_dir)  # path to the SavedModel directory
     # This is needed for TF Select ops: Cast, RealDiv
     converter.target_spec.supported_ops = [
-        tf.lite.OpsSet.TFLITE_BUILTINS, # enable TensorFlow Lite ops.
-        tf.lite.OpsSet.SELECT_TF_OPS # enable TensorFlow ops.
+        tf.lite.OpsSet.TFLITE_BUILTINS,  # enable TensorFlow Lite ops.
+        tf.lite.OpsSet.SELECT_TF_OPS  # enable TensorFlow ops.
     ]
 
     tflite_model = converter.convert()
@@ -89,16 +90,16 @@ def convert(checkpoint_path, export_tensorflow):
                       do_constant_folding=True,  # whether to execute constant folding for optimization
                       input_names=['input'],   # the model's input names
                       output_names=['output'],
-                      dynamic_axes={'input': [1]}) # the model's output names
+                      dynamic_axes={'input': [1]})  # the model's output names
 
     # Validate conversion
     onnx_model = onnx.load(model_path)
-    a = onnx.checker.check_model(onnx_model)
+    onnx.checker.check_model(onnx_model)
 
     ort_session = onnxruntime.InferenceSession(model_path)
 
     # compute ONNX Runtime output prediction
-    ort_inputs = { ort_session.get_inputs()[0].name: to_numpy(x) }
+    ort_inputs = {ort_session.get_inputs()[0].name: to_numpy(x)}
     ort_outs = ort_session.run(None, ort_inputs)
 
     # compare ONNX Runtime and PyTorch results

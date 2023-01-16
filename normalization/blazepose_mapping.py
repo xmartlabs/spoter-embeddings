@@ -1,7 +1,4 @@
 
-from normalization.body_normalization import BODY_IDENTIFIERS
-from normalization.hand_normalization import HAND_IDENTIFIERS
-
 _BODY_KEYPOINT_MAPPING = {
     "nose": "nose",
     "left_eye": "leftEye",

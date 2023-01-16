@@ -1,10 +1,9 @@
 import torch
 import numpy as np
 import torch.utils.data as torch_data
-from random import sample
 
 from datasets.datasets_utils import load_dataset, tensor_to_dictionary, dictionary_to_tensor, \
-        random_augmentation
+    random_augmentation
 from normalization.body_normalization import normalize_single_dict as normalize_single_body_dict
 from normalization.hand_normalization import normalize_single_dict as normalize_single_hand_dict
 
@@ -51,7 +50,7 @@ class CzechSLRDataset(torch_data.Dataset):
         label = torch.Tensor([self.labels[idx]])
 
         depth_map = tensor_to_dictionary(depth_map)
-        
+
         # Apply potential augmentations
         depth_map = random_augmentation(self.augmentations, self.augmentations_prob, depth_map)
 

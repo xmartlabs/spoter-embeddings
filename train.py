@@ -3,13 +3,11 @@ from datetime import datetime
 import os
 import os.path as op
 import argparse
-import random
 import json
 from datasets.dataset_loader import LocalDatasetLoader
 from tracking.tracker import Tracker
 import torch
 import multiprocessing
-import numpy as np
 import torch.nn as nn
 import torch.optim as optim
 # import matplotlib.pyplot as plt
@@ -29,10 +27,9 @@ from training.train_arguments import get_default_args
 from utils import get_logger
 try:
     # Needed for argparse patching in case clearml is used
-    import clearml
+    import clearml  # noqa
 except ImportError:
     pass
-
 
 
 PROJECT_NAME = "spoter"

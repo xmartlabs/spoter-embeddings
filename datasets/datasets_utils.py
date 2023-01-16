@@ -6,7 +6,7 @@ import numpy as np
 from torch.nn.utils.rnn import pad_sequence
 from random import randrange
 
-from augmentations import *
+from augmentations import augment_arm_joint_rotate, augment_rotate, augment_shear
 from normalization.body_normalization import BODY_IDENTIFIERS
 from normalization.hand_normalization import HAND_IDENTIFIERS
 
@@ -97,12 +97,12 @@ def collate_fn_triplet_padd(batch):
     negative_lengths = [element[2].shape[0] for element in batch]
     max_negative_l = max(negative_lengths)
 
-    anchor_mask = [[False] * anchor_lengths[n] + [True] * (max_anchor_l - anchor_lengths[n]) \
+    anchor_mask = [[False] * anchor_lengths[n] + [True] * (max_anchor_l - anchor_lengths[n])
                    for n in range(len(batch))]
-    positive_mask = [[False] * positive_lengths[n] + [True] * (max_positive_l - positive_lengths[n]) \
-                   for n in range(len(batch))]
-    negative_mask = [[False] * negative_lengths[n] + [True] * (max_negative_l - negative_lengths[n]) \
-                   for n in range(len(batch))]
+    positive_mask = [[False] * positive_lengths[n] + [True] * (max_positive_l - positive_lengths[n])
+                     for n in range(len(batch))]
+    negative_mask = [[False] * negative_lengths[n] + [True] * (max_negative_l - negative_lengths[n])
+                     for n in range(len(batch))]
 
     # PADDING
     anchor_batch = [element[0] for element in batch]
@@ -114,7 +114,7 @@ def collate_fn_triplet_padd(batch):
     negative_batch = pad_sequence(negative_batch, batch_first=True)
 
     return anchor_batch, positive_batch, negative_batch, \
-            torch.Tensor(anchor_mask), torch.Tensor(positive_mask), torch.Tensor(negative_mask)
+        torch.Tensor(anchor_mask), torch.Tensor(positive_mask), torch.Tensor(negative_mask)
 
 
 def collate_fn_padd(batch):
@@ -129,7 +129,7 @@ def collate_fn_padd(batch):
     anchor_lengths = [element[0].shape[0] for element in batch]
     max_anchor_l = max(anchor_lengths)
 
-    anchor_mask = [[False] * anchor_lengths[n] + [True] * (max_anchor_l - anchor_lengths[n]) \
+    anchor_mask = [[False] * anchor_lengths[n] + [True] * (max_anchor_l - anchor_lengths[n])
                    for n in range(len(batch))]
 
     # PADDING
