@@ -94,8 +94,11 @@ class BatchAllTripletLoss(nn.Module):
         if self.filter_easy_triplets:
             # step 4 - compute scalar loss value by averaging positive losses
             num_positive_losses = (triplet_loss > eps).float().sum()
+            # We want to factor in how many triplets were used compared to batch_size (used_triplets * 3 / batch_size)
+            # The effect of this should be similar to LR decay but penalizing batches with fewer hard triplets
+            percent_used_factor = min(1.0, num_positive_losses * 3 / labels.size()[0])
 
-            triplet_loss = triplet_loss.sum() / (num_positive_losses + eps)
+            triplet_loss = triplet_loss.sum() / (num_positive_losses + eps) * percent_used_factor
             return triplet_loss, valid_triplets, int(num_positive_losses)
         else:
             triplet_loss = triplet_loss.sum() / (valid_triplets + eps)

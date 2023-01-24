@@ -77,10 +77,18 @@ def train_epoch_embedding_online(model, epoch_iters, train_loader, val_loader, c
     iter_pct_used = []
     model.train(True)
     mini_batch = mini_batch_size or train_loader.batch_size
-    batch_loop_count = int(train_loader.batch_size / mini_batch)
     for i, (inputs, labels, masks) in enumerate(train_loader):
+        labels_size = labels.size()[0]
+        batch_loop_count = int(labels_size / mini_batch)
+        if batch_loop_count == 0:
+            continue
         # Second condition is added so that we only run batch sorting if we have a full batch
-        if enable_batch_sorting and labels.size()[0] == train_loader.batch_size:
+        if enable_batch_sorting:
+            if labels_size < train_loader.batch_size:
+                trim_count = labels_size % mini_batch
+                inputs = inputs[:-trim_count]
+                labels = labels[:-trim_count]
+                masks = masks[:-trim_count]
             embeddings = None
             with torch.no_grad():
                 for j in range(batch_loop_count):
@@ -99,9 +107,10 @@ def train_epoch_embedding_online(model, epoch_iters, train_loader, val_loader, c
         for k in range(mining_loop_count):
             for j in range(batch_loop_count):
                 optimizer.zero_grad(set_to_none=True)
-                embeddings = compute_batched_embeddings(model, device, inputs, masks, mini_batch, j)
-
                 batch_labels = labels[mini_batch * j:mini_batch * (j + 1)]
+                if batch_labels.size()[0] == 0:
+                    break
+                embeddings = compute_batched_embeddings(model, device, inputs, masks, mini_batch, j)
                 loss, valid_triplets, used_triplets = criterion(embeddings, batch_labels)
 
                 loss.backward()

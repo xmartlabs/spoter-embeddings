@@ -58,9 +58,9 @@ def parse_create_args(parser):
     parser.add_argument('--videos-folder', '-videos', default=None,
                         help='Path to folder with videos. If None, then no information of videos (fps, length, \
                             width and height) will be stored in final csv file')
-    parser.add_argument('--num-classes', '-nc', default=100, help='Number of classes to use in WLASL dataset')
+    parser.add_argument('--num-classes', '-nc', default=100, type=int, help='Number of classes to use in WLASL dataset')
     parser.add_argument('--create-new-split', action='store_true')
-    parser.add_argument('--test-size', '-ts', default=0.25,
+    parser.add_argument('--test-size', '-ts', default=0.25, type=float,
                         help='Test split percentage size. Only required if --create-new-split is set')
 
 
@@ -74,11 +74,7 @@ def create(args):
     num_classes = args.num_classes
     test_size = args.test_size
 
-    try:
-        os.makedirs(dataset_folder)
-    except Exception:
-        print(f'Folder {dataset_folder} already exists, please remove it and run the script again')
-        exit()
+    os.makedirs(dataset_folder, exist_ok=True)
 
     shutil.copy(os.path.join(BASE_DATA_FOLDER, 'wlasl/id_to_label.json'), dataset_folder)
     shutil.copy(os.path.join(BASE_DATA_FOLDER, 'wlasl/WLASL_v0.3.json'), dataset_folder)
@@ -151,7 +147,7 @@ def create(args):
     assert set(df_train['labels'].unique()) == set(df_test['labels'].unique(
     )), 'The labels for train and test dataframe are different. We recommend to download the dataset again, or to use \
         the --create-new-split flag'
-    for split, df_split in zip(['train', 'test'],
+    for split, df_split in zip(['train', 'val'],
                                [df_train, df_test]):
         fn_out = op.join(dataset_folder, f'WLASL{num_classes}_{split}.csv')
         (df_split.reset_index(drop=True)

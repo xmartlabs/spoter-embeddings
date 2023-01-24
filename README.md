@@ -49,11 +49,19 @@ For ready to use datasets refer to the [Spoter] repository.
 
 For best results, we recommend building your own dataset by downloading a Sign language video dataset such as [WLASL] and then using the `extract_mediapipe_landmarks.py` and `create_wlasl_landmarks_dataset.py` scripts to create a body keypoints datasets that can be used to train the Spoter embeddings model.
 
-<!-- Document script usage ? -->
+You can run these scripts as follows:
+```bash
+# This will extract landmarks from the downloaded videos
+python3 preprocessing.py extract -videos <path_to_video_folder> --output-landmarks <path_to_landmarks_folder>
 
-<!-- ## Example notebooks -->
+# This will create a dataset (csv file) with the first 100 classes, splitting 20% of it to the test set, and 80% for train
+python3 preprocessing.py create -videos <path_to_video_folder> -lmks <path_to_landmarks_folder> --dataset-folder=<output_folder> --create-new-split -ts=0.2
+```
 
-<!-- Explain the example notebooks included -->
+## Example notebooks
+There are two Jupyter notebooks included in the `notebooks` folder.
+* embeddings_evaluation.ipynb: This notebook shows how to evaluate a model
+* visualize_embeddings.ipynb: Model embeddings visualization, optionally with embedded input video
 
 
 ## Modifications on [SPOTER](https://github.com/matyasbohacek/spoter)
@@ -90,20 +98,6 @@ relevant License and copyright notice is included, our work is cited and all cha
 
 The license for the [WLASL](https://arxiv.org/pdf/1910.11006.pdf) and [LSA64](https://core.ac.uk/download/pdf/76495887.pdf) datasets used for experiments is, however, the [Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/) license which allows only for non-commercial usage.
 
-<!-- ## Citation
-
-If you find our work relevant, build upon it or compare your approaches with it, please cite our work as stated below:
-
-```
-@InProceedings{Bohacek_2022_WACV,
-    author    = {Boh\'a\v{c}ek, Maty\'a\v{s} and Hr\'uz, Marek},
-    title     = {Sign Pose-Based Transformer for Word-Level Sign Language Recognition},
-    booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) Workshops},
-    month     = {January},
-    year      = {2022},
-    pages     = {182-191}
-}
-``` -->
 
 [Spoter]: (https://github.com/matyasbohacek/spoter)
 [WLASL]: (https://dxli94.github.io/WLASL/)
