@@ -1,6 +1,6 @@
 # SPOTER Embeddings
 
-This repository contains code for the Spoter embedding model
+This repository contains code for the Spoter embedding model.
 <!-- explained in this [blog post](link...). -->
 The model is heavily based on [Spoter] which was presented in
 [Sign Pose-Based Transformer for Word-Level Sign Language Recognition](https://openaccess.thecvf.com/content/WACV2022W/HADCV/html/Bohacek_Sign_Pose-Based_Transformer_for_Word-Level_Sign_Language_Recognition_WACVW_2022_paper.html) with one of the main modifications being
@@ -8,10 +8,38 @@ that this is an embedding model instead of a classification model.
 This allows for several zero-shot tasks on unseen Sign Language datasets from around the world.
 <!-- More details about this are shown in the blog post mentioned above. -->
 
-<!-- ## Results -->
-<!-- Include some graphical results here -->
+## Modifications on [SPOTER](https://github.com/matyasbohacek/spoter)
+Here is a list of the main modifications made on Spoter code and model architecture:
+
+* The output layer is a linear layer but trained using triplet loss instead of CrossEntropyLoss. The output of the model
+is therefore an embedding vector that can be used for several downstream tasks.
+* We started using the keypoints dataset published by Spoter but later created new datasets using BlazePose from Mediapipe (as it is done in [Spoter 2](https://arxiv.org/abs/2210.00893)). This improves results considerably.
+* We select batches in a way that they contain several hard triplets and then compute the loss on all hard triplets found in each batch.
+* Some code refactoring to acomodate new classes we implemented.
+* Minor code fix when using rotate augmentation to avoid exceptions.
+
+<!-- Include GIFs for Spoter and Spoter embeddings. This could be linked from the blog post -->
+
+
+## Results
+
+![Scatter plot of dataset embeddings](/assets/scatter_plot.png)
+
+We used the silhouette score to measure how well the clusters are defined during the training step.
+Silhouette score will be high (close to 1) when all clusters of different classes are well separated from each other, and it will be low (close to -1) for the opposite.
+Our best model reached 0.7 on the train set and 0.1 on validation.
+
+### Classification accuracy
+While the model was not trained with classification specifically in mind, it can still be used for that purpose.
+Here we show top-1 and top-5 classifications which are calculated by taking the 1 (or 5) nearest vector of different classes, to the target vector.
+
+To estimate the accuracy for LSA, we take a “train” set as given and then classify the holdout set based on the closest vectors from the “train” set.
+This is done using the model trained on WLASL100 dataset only, to show how our model has zero-shot capabilities.
+
+![Accuracy table](/assets/accuracy.png)
 
 <!--  Also link the product blog here -->
+
 
 ## Get Started
 
@@ -35,6 +63,7 @@ To train the model, run `train.sh` in Docker or your virtual env.
 
 The hyperparameters with their descriptions can be found in the [train.py](link...) file.
 
+
 ## Data
 
 Same as with SPOTER, this model works on top of sequences of signers' skeletal data extracted from videos.
@@ -43,7 +72,7 @@ quicker and lighter, while you can choose any SOTA body pose model to preprocess
 This makes our model lightweight and able to run in real-time (for example, it takes around 40ms to process a 4-second
 25 FPS video inside a web browser using onnxruntime)
 
-![Alt Text](http://spoter.signlanguagerecognition.com/img/datasets_overview.gif)
+![Sign Language Dataset Overview](http://spoter.signlanguagerecognition.com/img/datasets_overview.gif)
 
 For ready to use datasets refer to the [Spoter] repository.
 
@@ -58,21 +87,12 @@ python3 preprocessing.py extract -videos <path_to_video_folder> --output-landmar
 python3 preprocessing.py create -videos <path_to_video_folder> -lmks <path_to_landmarks_folder> --dataset-folder=<output_folder> --create-new-split -ts=0.2
 ```
 
+
 ## Example notebooks
 There are two Jupyter notebooks included in the `notebooks` folder.
 * embeddings_evaluation.ipynb: This notebook shows how to evaluate a model
 * visualize_embeddings.ipynb: Model embeddings visualization, optionally with embedded input video
 
-
-## Modifications on [SPOTER](https://github.com/matyasbohacek/spoter)
-Here is a list of the main modifications made on Spoter code and model architecture:
-
-* The output layer is a linear layer but trained using triplet loss instead of CrossEntropyLoss. The output of the model
-is therefore an embedding vector that can be used for several downstream tasks.
-* We started using the keypoints dataset published by Spoter but later created new datasets using BlazePose from Mediapipe (as it is done in [Spoter 2](https://arxiv.org/abs/2210.00893)). This improves results considerably.
-* We select batches in a way that they contain several hard triplets and then compute the loss on all hard triplets found in each batch.
-* Some code refactoring to acomodate new classes we implemented.
-* Minor code fix when using rotate augmentation to avoid exceptions.
 
 ## Tracking experiments with ClearML
 The code supports tracking experiments, datasets, and models in a ClearML server.
