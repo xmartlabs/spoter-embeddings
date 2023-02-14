@@ -15,16 +15,11 @@ def load_dataset(file_location: str):
 
     # Load the datset csv file
     df = pd.read_csv(file_location, encoding="utf-8")
-
-    # TO BE DELETED
     df.columns = [item.replace("_left_", "_0_").replace("_right_", "_1_") for item in list(df.columns)]
-    if "neck_X" not in df.columns:
-        df["neck_X"] = [0] * len(df)
-        df["neck_Y"] = [0] * len(df)
 
     # TEMP
     labels = df["labels"].to_list()
-    # labels = [label + 1 for label in df["labels"].to_list()]
+
     data = []
 
     for row_index, row in df.iterrows():
