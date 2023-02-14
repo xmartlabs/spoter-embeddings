@@ -70,7 +70,3 @@ class CzechSLRDataset(torch_data.Dataset):
 
     def __len__(self):
         return len(self.labels)
-
-
-if __name__ == "__main__":
-    pass

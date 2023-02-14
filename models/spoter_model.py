@@ -64,7 +64,3 @@ class SPOTER(nn.Module):
         res = self.linear_class(h)
 
         return res
-
-
-if __name__ == "__main__":
-    pass

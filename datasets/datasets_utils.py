@@ -8,10 +8,7 @@ from random import randrange
 
 from augmentations import augment_arm_joint_rotate, augment_rotate, augment_shear
 from normalization.body_normalization import BODY_IDENTIFIERS
-from normalization.hand_normalization import HAND_IDENTIFIERS
-
-
-HAND_IDENTIFIERS = [id + "_0" for id in HAND_IDENTIFIERS] + [id + "_1" for id in HAND_IDENTIFIERS]
+from augmentations.augment import HAND_IDENTIFIERS
 
 
 def load_dataset(file_location: str):

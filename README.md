@@ -59,6 +59,8 @@ If you prefer running in a **virtual environment** instead, then first install d
 pip install -r requirements.txt
 ```
 
+> We tested this using Python 3.7.13. Other versions may work.
+
 To train the model, run `train.sh` in Docker or your virtual env.
 
 The hyperparameters with their descriptions can be found in the [train.py](link...) file.
@@ -109,6 +111,15 @@ If using Docker, you can map it into Docker adding these volumes when running `d
 ```
 -v $HOME/clearml.conf:/root/clearml.conf -v $HOME/.clearml:/root/.clearml
 ```
+
+## Model conversion
+
+Follow these steps to convert your model to ONNX, TF or TFlite:
+* Install the additional dependencies listed in `conversion_requirements.txt`. This is best done inside the Docker container.
+* Run `python convert.py -c <PATH_TO_PYTORCH_CHECKPOINT>`. Add `-tf` if you want to export TensorFlow and TFlite models too.
+* The output models should be generated in a folder named `converted_models`.
+
+> You can test your model's performance in a web browser. Check out the README in the [web](/web/) folder.
 
 
 ## License
