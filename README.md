@@ -1,3 +1,6 @@
+
+<img src="assets/banner.png" width=100%/>
+
 # SPOTER Embeddings
 
 This repository contains code for the Spoter embedding model.
