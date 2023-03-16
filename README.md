@@ -20,7 +20,7 @@ is therefore an embedding vector that can be used for several downstream tasks.
 * Some code refactoring to acomodate new classes we implemented.
 * Minor code fix when using rotate augmentation to avoid exceptions.
 
-![Blog_LSU10.gif](https://blog.xmartlbs.com/images/building-a-zero-shot-sign-pose-embedding-model/Blog_LSU10_(1)_(1).gif)
+![Blog_LSU10.gif](https://blog.xmartlabs.com/images/building-a-zero-shot-sign-pose-embedding-model/Blog_LSU10_(1)_(1).gif)
 
 ## Results
 
