@@ -3,7 +3,7 @@
 
 # SPOTER Embeddings
 
-This repository contains code for the Spoter embedding model explained in this [blog post].
+This repository contains code for the Spoter embedding model explained in [this blog post](https://blog.xmartlbs.com/blog/machine-learning-sign-language-recognition/).
 The model is heavily based on [Spoter] which was presented in
 [Sign Pose-Based Transformer for Word-Level Sign Language Recognition](https://openaccess.thecvf.com/content/WACV2022W/HADCV/html/Bohacek_Sign_Pose-Based_Transformer_for_Word-Level_Sign_Language_Recognition_WACVW_2022_paper.html) with one of the main modifications being
 that this is an embedding model instead of a classification model.
@@ -131,4 +131,3 @@ The license for the [WLASL](https://arxiv.org/pdf/1910.11006.pdf) and [LSA64](ht
 
 [Spoter]: (https://github.com/matyasbohacek/spoter)
 [WLASL]: (https://dxli94.github.io/WLASL/)
-[blog post]: (https://blog.xmartlbs.com/blog/machine-learning-sign-language-recognition/)
