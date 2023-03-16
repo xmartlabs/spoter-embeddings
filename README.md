@@ -4,7 +4,7 @@
 # SPOTER Embeddings
 
 This repository contains code for the Spoter embedding model explained in [this blog post](https://blog.xmartlbs.com/blog/machine-learning-sign-language-recognition/).
-The model is heavily based on [Spoter] which was presented in
+The model is heavily based on [Spoter](https://github.com/matyasbohacek/spoter) which was presented in
 [Sign Pose-Based Transformer for Word-Level Sign Language Recognition](https://openaccess.thecvf.com/content/WACV2022W/HADCV/html/Bohacek_Sign_Pose-Based_Transformer_for_Word-Level_Sign_Language_Recognition_WACVW_2022_paper.html) with one of the main modifications being
 that this is an embedding model instead of a classification model.
 This allows for several zero-shot tasks on unseen Sign Language datasets from around the world.
@@ -75,9 +75,9 @@ This makes our model lightweight and able to run in real-time (for example, it t
 
 ![Sign Language Dataset Overview](http://spoter.signlanguagerecognition.com/img/datasets_overview.gif)
 
-For ready to use datasets refer to the [Spoter] repository.
+For ready to use datasets refer to the [Spoter](https://github.com/matyasbohacek/spoter) repository.
 
-For best results, we recommend building your own dataset by downloading a Sign language video dataset such as [WLASL] and then using the `extract_mediapipe_landmarks.py` and `create_wlasl_landmarks_dataset.py` scripts to create a body keypoints datasets that can be used to train the Spoter embeddings model.
+For best results, we recommend building your own dataset by downloading a Sign language video dataset such as [WLASL](https://dxli94.github.io/WLASL/) and then using the `extract_mediapipe_landmarks.py` and `create_wlasl_landmarks_dataset.py` scripts to create a body keypoints datasets that can be used to train the Spoter embeddings model.
 
 You can run these scripts as follows:
 ```bash
@@ -127,7 +127,3 @@ The **code** is published under the [Apache License 2.0](./LICENSE) which allows
 relevant License and copyright notice is included, our work is cited and all changes are stated.
 
 The license for the [WLASL](https://arxiv.org/pdf/1910.11006.pdf) and [LSA64](https://core.ac.uk/download/pdf/76495887.pdf) datasets used for experiments is, however, the [Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/) license which allows only for non-commercial usage.
-
-
-[Spoter]: (https://github.com/matyasbohacek/spoter)
-[WLASL]: (https://dxli94.github.io/WLASL/)
