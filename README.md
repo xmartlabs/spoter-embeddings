@@ -3,13 +3,12 @@
 
 # SPOTER Embeddings
 
-This repository contains code for the Spoter embedding model.
-<!-- explained in this [blog post](link...). -->
-The model is heavily based on [Spoter] which was presented in
+This repository contains code for the Spoter embedding model explained in [this blog post](https://blog.xmartlabs.com/blog/machine-learning-sign-language-recognition/).
+The model is heavily based on [Spoter](https://github.com/matyasbohacek/spoter) which was presented in
 [Sign Pose-Based Transformer for Word-Level Sign Language Recognition](https://openaccess.thecvf.com/content/WACV2022W/HADCV/html/Bohacek_Sign_Pose-Based_Transformer_for_Word-Level_Sign_Language_Recognition_WACVW_2022_paper.html) with one of the main modifications being
 that this is an embedding model instead of a classification model.
 This allows for several zero-shot tasks on unseen Sign Language datasets from around the world.
-<!-- More details about this are shown in the blog post mentioned above. -->
+More details about this are shown in the blog post mentioned above.
 
 ## Modifications on [SPOTER](https://github.com/matyasbohacek/spoter)
 Here is a list of the main modifications made on Spoter code and model architecture:
@@ -21,8 +20,7 @@ is therefore an embedding vector that can be used for several downstream tasks.
 * Some code refactoring to acomodate new classes we implemented.
 * Minor code fix when using rotate augmentation to avoid exceptions.
 
-<!-- Include GIFs for Spoter and Spoter embeddings. This could be linked from the blog post -->
-
+![Blog_LSU10.gif](https://blog.xmartlabs.com/images/building-a-zero-shot-sign-pose-embedding-model/Blog_LSU10_(1)_(1).gif)
 
 ## Results
 
@@ -40,8 +38,6 @@ To estimate the accuracy for LSA, we take a “train” set as given and then cl
 This is done using the model trained on WLASL100 dataset only, to show how our model has zero-shot capabilities.
 
 ![Accuracy table](/assets/accuracy.png)
-
-<!--  Also link the product blog here -->
 
 
 ## Get Started
@@ -66,7 +62,7 @@ pip install -r requirements.txt
 
 To train the model, run `train.sh` in Docker or your virtual env.
 
-The hyperparameters with their descriptions can be found in the [train.py](link...) file.
+The hyperparameters with their descriptions can be found in the [training/train_arguments.py](/training/train_arguments.py) file.
 
 
 ## Data
@@ -79,9 +75,9 @@ This makes our model lightweight and able to run in real-time (for example, it t
 
 ![Sign Language Dataset Overview](http://spoter.signlanguagerecognition.com/img/datasets_overview.gif)
 
-For ready to use datasets refer to the [Spoter] repository.
+For ready to use datasets refer to the [Spoter](https://github.com/matyasbohacek/spoter) repository.
 
-For best results, we recommend building your own dataset by downloading a Sign language video dataset such as [WLASL] and then using the `extract_mediapipe_landmarks.py` and `create_wlasl_landmarks_dataset.py` scripts to create a body keypoints datasets that can be used to train the Spoter embeddings model.
+For best results, we recommend building your own dataset by downloading a Sign language video dataset such as [WLASL](https://dxli94.github.io/WLASL/) and then using the `extract_mediapipe_landmarks.py` and `create_wlasl_landmarks_dataset.py` scripts to create a body keypoints datasets that can be used to train the Spoter embeddings model.
 
 You can run these scripts as follows:
 ```bash
@@ -131,7 +127,3 @@ The **code** is published under the [Apache License 2.0](./LICENSE) which allows
 relevant License and copyright notice is included, our work is cited and all changes are stated.
 
 The license for the [WLASL](https://arxiv.org/pdf/1910.11006.pdf) and [LSA64](https://core.ac.uk/download/pdf/76495887.pdf) datasets used for experiments is, however, the [Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/) license which allows only for non-commercial usage.
-
-
-[Spoter]: (https://github.com/matyasbohacek/spoter)
-[WLASL]: (https://dxli94.github.io/WLASL/)
