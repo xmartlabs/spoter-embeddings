@@ -134,7 +134,7 @@ If you use this code in your research please cite us:
 
 @misc{xmartlabs-2023-spoterembeddings,
   author = {Pablo Grill and Gabriel Lema and Andres Herrera and Mathias Claassen},
-  title = {SpoterEmbeddings: Create embeddings from sign pose videos using Transformers},
+  title = {{SpoterEmbeddings}: Create embeddings from sign pose videos using {T}ransformers},
   year = {2023},
   publisher = {GitHub},
   journal = {GitHub repository},
