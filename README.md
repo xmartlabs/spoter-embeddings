@@ -132,7 +132,7 @@ The license for the [WLASL](https://arxiv.org/pdf/1910.11006.pdf) and [LSA64](ht
 ## Citation
 If you use this code in your research please cite us:
 
-```
+```bibtex
 @misc{xmartlabs-2023-spoterembeddings,
   author = {Pablo Grill and Gabriel Lema and Andres Herrera and Mathias Claassen},
   title = {{SpoterEmbeddings}: Create embeddings from sign pose videos using {T}ransformers},
